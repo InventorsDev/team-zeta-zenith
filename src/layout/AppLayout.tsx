@@ -7,7 +7,7 @@ export default function AppLayout() {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <header className="border-b bg-white">
         <div className="mx-auto max-w-5xl px-4 h-14 flex items-center justify-between">
-          <Link to="/" className="font-semibold">MyApp</Link>
+          <Link to="/" className="font-semibold">Team Zenith</Link>
           <nav className="flex items-center gap-4">
             {user ? (
               <>
