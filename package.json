@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky",
+    "test":"echo \"No test scripts yet\" && exit 0"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
