@@ -1,13 +1,13 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { LandingPage } from "../components/LandingPage";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Zeta Zenith - AI-Powered Support Analytics" },
+    { name: "description", content: "Transform your customer support with AI-powered ticket analysis, sentiment detection, and actionable insights." },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return <LandingPage />;
 }
