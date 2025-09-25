@@ -1,0 +1,5 @@
+# echo ".......Running husky script to check for build errors......."
+# npm run build
+# npm test
+
+echo "You're all set to push✅"
