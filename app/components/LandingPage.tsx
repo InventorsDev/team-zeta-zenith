@@ -6,7 +6,7 @@ import { TestimonialsSection } from './landing/TestimonialsSection';
 import { PricingSection } from './landing/PricingSection';
 import { CTASection } from './landing/CTASection';
 import { Header } from './landing/Header';
-import { Footer } from './landing/Footer';
+// import { Footer } from './landing/Footer';
 
 export function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,7 +24,7 @@ export function LandingPage() {
         <CTASection />
       </main>
       
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
