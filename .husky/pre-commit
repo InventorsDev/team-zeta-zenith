@@ -1,5 +1,5 @@
 echo ".........Running husky scripts for lint and test checks........."
-# npm run lint
+npm run lint
 # npm test
 
 echo "You're all set to commit✅"
