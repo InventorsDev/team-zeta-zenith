@@ -3,7 +3,7 @@ import { CheckIcon } from '@heroicons/react/24/outline';
 const plans = [
   {
     name: 'Starter',
-    price: '$99',
+    price: '$20',
     period: '/month',
     description: 'Perfect for small support teams getting started with AI analytics.',
     features: [
@@ -19,7 +19,7 @@ const plans = [
   },
   {
     name: 'Professional',
-    price: '$299',
+    price: '$50',
     period: '/month',
     description: 'Ideal for growing teams that need advanced analytics and automation.',
     features: [
