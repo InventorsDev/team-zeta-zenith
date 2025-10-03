@@ -28,8 +28,8 @@ const steps = [
     title: 'Get Real-time Insights',
     description: 'Monitor trends, identify patterns, and receive alerts for unusual activity.',
     icon: ChartBarIcon,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-100',
+    color: 'text-teal-600',
+    bgColor: 'bg-teal-100',
   },
   {
     number: '04',
@@ -57,7 +57,7 @@ export function HowItWorksSection() {
 
         <div className="relative">
           {/* Connection lines */}
-          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-200 via-green-200 via-purple-200 to-orange-200 transform -translate-y-1/2"></div>
+          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-200 via-green-200 via-teal-200 to-orange-200 transform -translate-y-1/2"></div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, index) => (
@@ -110,8 +110,10 @@ export function HowItWorksSection() {
               'Zendesk', 'Intercom', 'Freshdesk', 'Help Scout', 'Slack', 'Teams'
             ].map((tool) => (
               <div key={tool} className="text-center group">
-                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-50 transition-colors">
-                  <div className="w-8 h-8 bg-gray-400 rounded"></div>
+                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-teal-50 transition-colors">
+                  <span className="text-2xl font-bold text-gray-700 group-hover:text-teal-600 transition-colors">
+                    {tool.charAt(0)}
+                  </span>
                 </div>
                 <span className="text-sm font-medium text-gray-700">{tool}</span>
               </div>
