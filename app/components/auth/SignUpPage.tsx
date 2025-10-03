@@ -83,7 +83,7 @@ export function SignUpPage() {
       await apiClient.register({
         email: formData.workEmail,
         password: formData.password,
-        name: formData.fullName,
+        full_name: formData.fullName,
       });
 
       // Redirect to dashboard after successful signup
