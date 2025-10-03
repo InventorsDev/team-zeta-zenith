@@ -7,7 +7,6 @@ export function OnboardingPage() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     // TODO: Implement Google OAuth
-    console.log('Google sign in clicked');
     setTimeout(() => {
       setIsLoading(false);
       // Redirect to dashboard after successful Google sign-in
