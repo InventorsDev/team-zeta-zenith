@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon, CheckIcon, CreditCardIcon, ClockIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
 
 export function CTASection() {
   return (
@@ -33,8 +33,8 @@ export function CTASection() {
           {/* Benefits */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <CheckIcon className="h-6 w-6 text-white" />
+              <div className="w-12 h-12  bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <CreditCardIcon className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">
                 No Credit Card Required
@@ -45,8 +45,8 @@ export function CTASection() {
             </div>
             
             <div className="text-center">
-              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <CheckIcon className="h-6 w-6 text-white" />
+              <div className="w-12 h-12  bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <ClockIcon className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">
                 14-Day Free Trial
@@ -57,8 +57,8 @@ export function CTASection() {
             </div>
             
             <div className="text-center">
-              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <CheckIcon className="h-6 w-6 text-white" />
+              <div className="w-12 h-12 bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <RocketLaunchIcon className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">
                 Setup in Minutes
