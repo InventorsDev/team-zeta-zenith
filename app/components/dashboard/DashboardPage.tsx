@@ -536,39 +536,14 @@ export function DashboardPage() {
       </div>
 
       {/* Top Header */}
-      <div className="absolute top-0 left-64 right-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-10">
+      <div className="absolute top-0 left-64 right-0 h-16 flex items-center justify-between px-6 z-10">
         <div></div>
         <div className="flex items-center space-x-4">
           <button className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
             <PlusIcon className="h-4 w-4 mr-2" />
             New Ticket
           </button>
-          <BellIcon className="h-6 w-6 text-gray-500 cursor-pointer hover:text-gray-700" />
-
-          {/* Profile Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-10 h-10 bg-teal-600 rounded-full cursor-pointer flex items-center justify-center text-white font-semibold hover:bg-teal-700 transition-colors"
-            >
-              {userInitials}
-            </button>
-
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
-                <div className="px-4 py-2 border-b border-gray-200">
-                  <p className="text-sm font-medium text-gray-900">{userName}</p>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
-                >
-                  <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
+          
         </div>
       </div>
     </div>
