@@ -1,8 +1,18 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { useState, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { EyeIcon, EyeSlashIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { apiClient, type ApiError } from '~/lib/api';
+
+interface PasswordValidation {
+  minLength: boolean;
+  hasUppercase: boolean;
+  hasNumber: boolean;
+  hasSpecialChar: boolean;
+  isValid: boolean;
+}
 
 export function SignUpPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     workEmail: '',
@@ -13,6 +23,35 @@ export function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
+
+  // Real-time password validation
+  const passwordValidation = useMemo((): PasswordValidation => {
+    const password = formData.password;
+    const minLength = password.length >= 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return {
+      minLength,
+      hasUppercase,
+      hasNumber,
+      hasSpecialChar,
+      isValid: minLength && hasUppercase && hasNumber && hasSpecialChar
+    };
+  }, [formData.password]);
+
+  // Check if form is valid
+  const isFormValid = useMemo(() => {
+    return (
+      formData.fullName.trim() !== '' &&
+      formData.workEmail.trim() !== '' &&
+      passwordValidation.isValid &&
+      formData.password === formData.confirmPassword &&
+      formData.agreeToTerms
+    );
+  }, [formData, passwordValidation]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -24,16 +63,37 @@ export function SignUpPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+
+    // Validate password requirements
+    if (!passwordValidation.isValid) {
+      setError('Please meet all password requirements');
+      return;
+    }
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     setIsLoading(true);
-    
-    // TODO: Implement actual sign up logic
-    console.log('Sign up form submitted:', formData);
-    
-    setTimeout(() => {
-      setIsLoading(false);
+
+    try {
+      await apiClient.register({
+        email: formData.workEmail,
+        password: formData.password,
+        name: formData.fullName,
+      });
+
       // Redirect to dashboard after successful signup
-      window.location.href = '/dashboard';
-    }, 1000);
+      navigate('/dashboard');
+    } catch (err) {
+      const apiError = err as ApiError;
+      setError(apiError.message || 'Failed to create account. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -53,6 +113,12 @@ export function SignUpPage() {
 
           {/* Sign Up Form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
             {/* Full Name */}
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -117,6 +183,52 @@ export function SignUpPage() {
                   )}
                 </button>
               </div>
+
+              {/* Password Requirements */}
+              {formData.password && (
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center text-sm">
+                    {passwordValidation.minLength ? (
+                      <CheckCircleIcon className="h-4 w-4 text-green-500 mr-2" />
+                    ) : (
+                      <XCircleIcon className="h-4 w-4 text-gray-400 mr-2" />
+                    )}
+                    <span className={passwordValidation.minLength ? 'text-green-600' : 'text-gray-600'}>
+                      At least 8 characters
+                    </span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    {passwordValidation.hasUppercase ? (
+                      <CheckCircleIcon className="h-4 w-4 text-green-500 mr-2" />
+                    ) : (
+                      <XCircleIcon className="h-4 w-4 text-gray-400 mr-2" />
+                    )}
+                    <span className={passwordValidation.hasUppercase ? 'text-green-600' : 'text-gray-600'}>
+                      One uppercase letter
+                    </span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    {passwordValidation.hasNumber ? (
+                      <CheckCircleIcon className="h-4 w-4 text-green-500 mr-2" />
+                    ) : (
+                      <XCircleIcon className="h-4 w-4 text-gray-400 mr-2" />
+                    )}
+                    <span className={passwordValidation.hasNumber ? 'text-green-600' : 'text-gray-600'}>
+                      One number
+                    </span>
+                  </div>
+                  <div className="flex items-center text-sm">
+                    {passwordValidation.hasSpecialChar ? (
+                      <CheckCircleIcon className="h-4 w-4 text-green-500 mr-2" />
+                    ) : (
+                      <XCircleIcon className="h-4 w-4 text-gray-400 mr-2" />
+                    )}
+                    <span className={passwordValidation.hasSpecialChar ? 'text-green-600' : 'text-gray-600'}>
+                      One special character (!@#$%^&*...)
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Confirm Password */}
@@ -177,8 +289,8 @@ export function SignUpPage() {
             {/* Create Account Button */}
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              disabled={isLoading || !isFormValid}
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200"
             >
               {isLoading ? 'Creating account...' : 'Create Account'}
             </button>
