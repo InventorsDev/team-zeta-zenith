@@ -93,7 +93,7 @@ export function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
                 </a>
                 <a
                   href="/onboarding"
-                  className="block mx-3 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium text-center hover:bg-blue-700 transition-colors"
+                  className="block mx-3 bg-teal-600 text-white px-6 py-2 rounded-lg font-medium text-center hover:bg-blue-700 transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Get Started
