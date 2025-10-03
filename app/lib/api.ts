@@ -8,7 +8,7 @@ export interface ApiError {
 export interface RegisterRequest {
   email: string;
   password: string;
-  name?: string;
+  full_name?: string;
 }
 
 export interface LoginRequest {
@@ -53,8 +53,6 @@ class ApiClient {
     const token = this.getAccessToken();
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
-      console.log('Making request to:', url);
-      console.log('With token:', token.substring(0, 20) + '...');
     }
 
     try {
@@ -71,7 +69,6 @@ class ApiClient {
 
         try {
           const errorData = await response.json();
-          console.log("errorData:", errorData);
           error.message = errorData.message || errorData.detail || error.message ;
         } catch {
           // If error response is not JSON, use default message
