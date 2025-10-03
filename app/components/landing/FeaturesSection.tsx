@@ -33,22 +33,22 @@ const features = [
     name: 'Response Time Optimization',
     description: 'Identify bottlenecks and optimize your support team\'s response times automatically.',
     icon: ClockIcon,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-100',
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-100',
   },
   {
     name: 'Advanced Analytics',
     description: 'Deep insights into ticket patterns, customer satisfaction trends, and team performance.',
     icon: EyeIcon,
-    color: 'text-indigo-600',
-    bgColor: 'bg-indigo-100',
+    color: 'text-teal-600',
+    bgColor: 'bg-teal-100',
   },
   {
     name: 'Custom Integrations',
     description: 'Seamlessly integrate with your existing support tools and workflows.',
     icon: CogIcon,
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-100',
+    color: 'text-cyan-600',
+    bgColor: 'bg-cyan-100',
   },
 ];
 
@@ -70,7 +70,7 @@ export function FeaturesSection() {
           {features.map((feature) => (
             <div
               key={feature.name}
-              className="group relative bg-white p-8 rounded-2xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300"
+              className="group relative bg-white p-8 rounded-2xl border border-gray-200 hover:border-teal-300 hover:shadow-lg transition-all duration-300"
             >
               <div className="flex items-center mb-6">
                 <div className={`p-3 rounded-lg ${feature.bgColor} group-hover:scale-110 transition-transform duration-300`}>
@@ -90,7 +90,7 @@ export function FeaturesSection() {
         </div>
 
         {/* Feature highlight */}
-        <div className="mt-16 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 lg:p-12">
+        <div className="mt-16 bg-gradient-to-r from-teal-50 to-orange-50 rounded-2xl p-8 lg:p-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
@@ -109,7 +109,7 @@ export function FeaturesSection() {
                   'Customer satisfaction tracking'
                 ].map((item) => (
                   <li key={item} className="flex items-center text-gray-700">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                    <div className="w-2 h-2 bg-teal-600 rounded-full mr-3"></div>
                     {item}
                   </li>
                 ))}
@@ -123,7 +123,7 @@ export function FeaturesSection() {
                   <span className="text-2xl font-bold text-gray-900">1,234</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full" style={{ width: '75%' }}></div>
+                  <div className="bg-gradient-to-r from-teal-500 to-cyan-500 h-2 rounded-full" style={{ width: '75%' }}></div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>

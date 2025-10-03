@@ -75,13 +75,13 @@ export function PricingSection() {
               key={plan.name}
               className={`relative bg-white rounded-2xl p-8 ${
                 plan.popular 
-                  ? 'ring-2 ring-blue-600 shadow-xl scale-105' 
+                  ? 'ring-2 ring-teal-600 shadow-xl scale-105' 
                   : 'border border-gray-200 hover:shadow-lg transition-shadow duration-300'
               }`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  <span className="bg-teal-600 text-white px-4 py-1 rounded-full text-sm font-medium">
                     Most Popular
                   </span>
                 </div>
@@ -116,7 +116,7 @@ export function PricingSection() {
               <button
                 className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
                   plan.popular
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transform hover:scale-105'
+                    ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white hover:from-teal-700 hover:to-cyan-700 transform hover:scale-105'
                     : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
                 }`}
               >

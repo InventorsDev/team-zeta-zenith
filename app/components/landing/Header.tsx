@@ -19,7 +19,7 @@ export function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
         <div className="w-full py-6 flex items-center justify-between border-b border-gray-200 lg:border-none">
           <div className="flex items-center">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">ZZ</span>
               </div>
               <span className="ml-2 text-xl font-bold text-gray-900">Zeta Zenith</span>
@@ -31,7 +31,7 @@ export function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-base font-medium text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-base font-medium text-gray-700 hover:text-teal-600 transition-colors"
               >
                 {item.name}
               </a>
@@ -47,7 +47,7 @@ export function Header({ isMenuOpen, setIsMenuOpen }: HeaderProps) {
             </a>
             <a
               href="/onboarding"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              className="bg-teal-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-teal-700 transition-colors"
             >
               Get Started
             </a>

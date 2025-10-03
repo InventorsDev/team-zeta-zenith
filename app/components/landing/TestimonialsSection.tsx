@@ -82,7 +82,7 @@ export function TestimonialsSection() {
 
               {/* Author */}
               <div className="flex items-center">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                <div className="w-12 h-12 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full flex items-center justify-center text-white font-semibold">
                   {testimonial.avatar}
                 </div>
                 <div className="ml-4">
@@ -114,7 +114,7 @@ export function TestimonialsSection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="#get-started"
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
               >
                 Start Free Trial
               </a>

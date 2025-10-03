@@ -2,26 +2,26 @@ import { ArrowRightIcon, PlayIcon } from '@heroicons/react/24/outline';
 
 export function HeroSection() {
   return (
-    <div className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
+    <div className="relative bg-gradient-to-br from-teal-50 via-white to-orange-50 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-1/4 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-1/3 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-0 left-1/4 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 right-1/4 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-1/3 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-24 sm:pb-20">
         <div className="text-center">
           {/* Badge */}
-          <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-8">
-            <span className="w-2 h-2 bg-blue-600 rounded-full mr-2 animate-pulse"></span>
+          <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-teal-100 text-teal-800 mb-8">
+            <span className="w-2 h-2 bg-teal-600 rounded-full mr-2 animate-pulse"></span>
             AI-Powered Support Analytics
           </div>
 
           {/* Main headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
             Transform Your
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-orange-600">
               Customer Support
             </span>
             with AI Intelligence
@@ -37,7 +37,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
             <a
               href="/onboarding"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold rounded-lg hover:from-teal-700 hover:to-cyan-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Start Free Trial
               <ArrowRightIcon className="ml-2 h-5 w-5" />
@@ -89,9 +89,9 @@ export function HeroSection() {
                   <div className="text-2xl font-bold text-green-900">4.7/5</div>
                   <div className="text-sm text-green-700">Satisfaction Score</div>
                 </div>
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-900">2.3h</div>
-                  <div className="text-sm text-purple-700">Avg Response Time</div>
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg">
+                  <div className="text-2xl font-bold text-orange-900">2.3h</div>
+                  <div className="text-sm text-orange-700">Avg Response Time</div>
                 </div>
               </div>
               
