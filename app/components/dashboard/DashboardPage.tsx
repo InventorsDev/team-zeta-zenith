@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { 
-  BellIcon, 
-  PlusIcon, 
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import {
+  BellIcon,
+  PlusIcon,
   MagnifyingGlassIcon,
   ChevronDownIcon,
   ChevronRightIcon,
@@ -13,8 +14,10 @@ import {
   PaperAirplaneIcon,
   SparklesIcon,
   PaperClipIcon,
-  FaceSmileIcon
+  FaceSmileIcon,
+  ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
+import { apiClient } from '~/lib/api';
 
 interface Ticket {
   id: string;
@@ -121,12 +124,46 @@ const mockCustomer: Customer = {
 };
 
 export function DashboardPage() {
+  const navigate = useNavigate();
   const [selectedTicket, setSelectedTicket] = useState<Ticket>(mockTickets[0]);
   const [replyText, setReplyText] = useState('');
   const [noteText, setNoteText] = useState('');
   const [activeTab, setActiveTab] = useState('All Tickets');
   const [searchQuery, setSearchQuery] = useState('');
   const [urgencyFilter, setUrgencyFilter] = useState('All');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userName, setUserName] = useState('User');
+  const [userInitials, setUserInitials] = useState('U');
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await apiClient.getCurrentUser();
+        if (user.name) {
+          setUserName(user.name);
+          const names = user.name.trim().split(' ');
+          if (names.length >= 2) {
+            setUserInitials(`${names[0][0]}${names[names.length - 1][0]}`.toUpperCase());
+          } else {
+            setUserInitials(user.name.substring(0, 2).toUpperCase());
+          }
+        } else if (user.email) {
+          setUserName(user.email);
+          setUserInitials(user.email.substring(0, 2).toUpperCase());
+        }
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+        navigate('/login');
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
+
+  const handleLogout = () => {
+    apiClient.logout();
+    navigate('/login');
+  };
 
   const navigationItems = [
     { name: 'Inbox', count: 5, active: true, badge: true },
@@ -384,7 +421,7 @@ export function DashboardPage() {
                 <button
                   onClick={handleSendReply}
                   disabled={!replyText.trim()}
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
                 >
                   <PaperAirplaneIcon className="h-4 w-4 mr-2" />
                   Send
@@ -478,7 +515,7 @@ export function DashboardPage() {
             <button
               onClick={handleAddNote}
               disabled={!noteText.trim()}
-              className="mt-2 w-full px-3 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-2 w-full px-3 py-2 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 disabled:opacity-50 cursor-pointer"
             >
               Send
             </button>
@@ -507,7 +544,31 @@ export function DashboardPage() {
             New Ticket
           </button>
           <BellIcon className="h-6 w-6 text-gray-500 cursor-pointer hover:text-gray-700" />
-          <div className="w-8 h-8 bg-gray-300 rounded-full cursor-pointer"></div>
+
+          {/* Profile Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-10 h-10 bg-teal-600 rounded-full cursor-pointer flex items-center justify-center text-white font-semibold hover:bg-teal-700 transition-colors"
+            >
+              {userInitials}
+            </button>
+
+            {isDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2">
+                <div className="px-4 py-2 border-b border-gray-200">
+                  <p className="text-sm font-medium text-gray-900">{userName}</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
+                >
+                  <ArrowRightOnRectangleIcon className="h-4 w-4 mr-2" />
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
