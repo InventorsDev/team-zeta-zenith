@@ -36,7 +36,9 @@ export function LogInPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">ZZ</span>
+            <Link to="/">
+              <span className="text-white font-bold text-sm">ZZ</span>
+            </Link>
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
