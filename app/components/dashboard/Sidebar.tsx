@@ -88,7 +88,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center px-3 py-2">
           <div className="flex-shrink-0">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
               <span className="text-xs font-bold text-white">SQ</span>
             </div>
           </div>

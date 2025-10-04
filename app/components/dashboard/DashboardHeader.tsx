@@ -105,7 +105,7 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
               aria-expanded={isDropdownOpen}
               aria-haspopup="true"
             >
-              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center text-white font-semibold text-sm">
                 {userInitials}
               </div>
             </button>

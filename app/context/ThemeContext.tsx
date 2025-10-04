@@ -10,27 +10,47 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+function getInitialTheme(): Theme {
+  if (typeof window === 'undefined') return 'light';
+
+  try {
+    const savedTheme = localStorage.getItem('theme') as Theme | null;
+    if (savedTheme) return savedTheme;
+
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return systemTheme;
+  } catch {
+    return 'light';
+  }
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Load theme from localStorage or system preference
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    const initialTheme = savedTheme || systemTheme;
+    // Sync with initial theme on mount
+    const initialTheme = getInitialTheme();
     setThemeState(initialTheme);
 
-    // Apply theme to document
     if (initialTheme === 'dark') {
       document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
   }, []);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    localStorage.setItem('theme', newTheme);
+
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('theme', newTheme);
+      } catch (error) {
+        console.error('Failed to save theme to localStorage:', error);
+      }
+    }
 
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -40,7 +60,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   };
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
   };
 
   // Prevent flash of wrong theme
