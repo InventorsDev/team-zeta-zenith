@@ -132,6 +132,113 @@ export interface IntegrationTestResult {
   bot_info?: any;
 }
 
+export enum TicketStatus {
+  OPEN = 'open',
+  IN_PROGRESS = 'in_progress',
+  RESOLVED = 'resolved',
+  CLOSED = 'closed',
+  PENDING = 'pending',
+}
+
+export enum TicketPriority {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  URGENT = 'urgent',
+}
+
+export enum TicketChannel {
+  EMAIL = 'email',
+  SLACK = 'slack',
+  ZENDESK = 'zendesk',
+  API = 'api',
+  WEB = 'web',
+}
+
+export interface Ticket {
+  id: number;
+  title: string;
+  description: string;
+  status: TicketStatus;
+  priority: TicketPriority;
+  channel: TicketChannel;
+  customer_email: string;
+  customer_name?: string;
+  customer_phone?: string;
+  external_id?: string;
+  assigned_to?: number;
+  organization_id: number;
+  integration_id?: number;
+  created_at: string;
+  updated_at: string;
+  first_response_at?: string;
+  resolved_at?: string;
+  closed_at?: string;
+  last_activity_at?: string;
+  sentiment_score?: number;
+  category?: string;
+  urgency_score?: number;
+  confidence_score?: number;
+  is_processed: boolean;
+  needs_human_review: boolean;
+  tags?: string[];
+  ticket_metadata?: Record<string, any>;
+  assignee_name?: string;
+  integration_name?: string;
+  organization_name?: string;
+}
+
+export interface TicketCreate {
+  title: string;
+  description: string;
+  customer_email: string;
+  customer_name?: string;
+  customer_phone?: string;
+  priority?: TicketPriority;
+  channel: TicketChannel;
+  tags?: string[];
+  ticket_metadata?: Record<string, any>;
+  integration_id?: number;
+  external_id?: string;
+}
+
+export interface TicketUpdate {
+  title?: string;
+  description?: string;
+  customer_name?: string;
+  customer_phone?: string;
+  priority?: TicketPriority;
+  status?: TicketStatus;
+  assigned_to?: number;
+  tags?: string[];
+  ticket_metadata?: Record<string, any>;
+}
+
+export interface PaginatedTickets {
+  items: Ticket[];
+  total: number;
+  page: number;
+  size: number;
+  pages: number;
+  has_next: boolean;
+  has_prev: boolean;
+}
+
+export interface TicketStats {
+  total_tickets: number;
+  open_tickets: number;
+  in_progress_tickets: number;
+  resolved_tickets: number;
+  closed_tickets: number;
+  pending_tickets: number;
+  avg_response_time_hours?: number;
+  avg_resolution_time_hours?: number;
+  tickets_by_priority: Record<string, number>;
+  tickets_by_channel: Record<string, number>;
+  tickets_by_category: Record<string, number>;
+  sentiment_distribution: Record<string, number>;
+}
+
 class ApiClient {
   private baseUrl: string;
 
@@ -370,6 +477,105 @@ class ApiClient {
     return this.request<any>(`/integrations/slack/sync?full_sync=${fullSync}`, {
       method: 'POST',
     });
+  }
+
+  // Ticket methods
+  async getTickets(params?: {
+    page?: number;
+    size?: number;
+    sort_by?: string;
+    sort_order?: 'asc' | 'desc';
+    status?: TicketStatus;
+    priority?: TicketPriority;
+    channel?: TicketChannel;
+    assigned_to?: number;
+    unassigned?: boolean;
+    customer_email?: string;
+    search?: string;
+    needs_review?: boolean;
+    is_processed?: boolean;
+  }): Promise<PaginatedTickets> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.size) queryParams.append('size', params.size.toString());
+    if (params?.sort_by) queryParams.append('sort_by', params.sort_by);
+    if (params?.sort_order) queryParams.append('sort_order', params.sort_order);
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.priority) queryParams.append('priority', params.priority);
+    if (params?.channel) queryParams.append('channel', params.channel);
+    if (params?.assigned_to !== undefined) queryParams.append('assigned_to', params.assigned_to.toString());
+    if (params?.unassigned !== undefined) queryParams.append('unassigned', params.unassigned.toString());
+    if (params?.customer_email) queryParams.append('customer_email', params.customer_email);
+    if (params?.search) queryParams.append('search', params.search);
+    if (params?.needs_review !== undefined) queryParams.append('needs_review', params.needs_review.toString());
+    if (params?.is_processed !== undefined) queryParams.append('is_processed', params.is_processed.toString());
+
+    const query = queryParams.toString();
+    return this.request<PaginatedTickets>(
+      `/tickets${query ? `?${query}` : ''}`,
+      { method: 'GET' }
+    );
+  }
+
+  async getTicketStats(): Promise<TicketStats> {
+    return this.request<TicketStats>('/tickets/stats', {
+      method: 'GET',
+    });
+  }
+
+  async getTicket(id: number): Promise<Ticket> {
+    return this.request<Ticket>(`/tickets/${id}`, {
+      method: 'GET',
+    });
+  }
+
+  async createTicket(data: TicketCreate): Promise<Ticket> {
+    return this.request<Ticket>('/tickets', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateTicket(id: number, data: TicketUpdate): Promise<Ticket> {
+    return this.request<Ticket>(`/tickets/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteTicket(id: number): Promise<void> {
+    return this.request<void>(`/tickets/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async updateTicketStatus(id: number, status: TicketStatus): Promise<Ticket> {
+    return this.request<Ticket>(`/tickets/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  async assignTicket(id: number, userId: number | null): Promise<Ticket> {
+    return this.request<Ticket>(`/tickets/${id}/assign`, {
+      method: 'PATCH',
+      body: JSON.stringify({ assigned_to: userId }),
+    });
+  }
+
+  async exportTickets(format: 'csv' | 'json' = 'csv'): Promise<Blob> {
+    const response = await fetch(`${this.baseUrl}/tickets/export?format=${format}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${this.getAccessToken()}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to export tickets');
+    }
+
+    return response.blob();
   }
 }
 
