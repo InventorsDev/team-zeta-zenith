@@ -47,6 +47,77 @@ export enum IntegrationStatus {
   PENDING = 'pending',
 }
 
+export enum AlertType {
+  HIGH_URGENCY = 'high_urgency',
+  SLA_BREACH = 'sla_breach',
+  SLA_WARNING = 'sla_warning',
+  ANOMALY = 'anomaly',
+  SPIKE = 'spike',
+  CUSTOM = 'custom',
+}
+
+export enum AlertSeverity {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  CRITICAL = 'critical',
+}
+
+export interface Alert {
+  id: number;
+  ticket_id?: number;
+  organization_id: number;
+  alert_type: AlertType;
+  severity: AlertSeverity;
+  title: string;
+  message?: string;
+  is_resolved: boolean;
+  resolved_at?: string;
+  resolved_by?: number;
+  is_notified: boolean;
+  notified_at?: string;
+  notification_channels?: string[];
+  metadata?: Record<string, any>;
+  triggered_at: string;
+  created_at: string;
+}
+
+export interface AlertRule {
+  id?: number;
+  name: string;
+  description?: string;
+  alert_type: AlertType;
+  severity: AlertSeverity;
+  conditions: AlertCondition[];
+  actions: AlertAction[];
+  enabled: boolean;
+  notification_channels: string[];
+}
+
+export interface AlertCondition {
+  field: string;
+  operator: string;
+  value: any;
+  logic?: 'AND' | 'OR';
+}
+
+export interface AlertAction {
+  type: string;
+  config: Record<string, any>;
+}
+
+export interface NotificationPreferences {
+  email_enabled: boolean;
+  slack_enabled: boolean;
+  alert_types: AlertType[];
+  severities: AlertSeverity[];
+  quiet_hours?: {
+    enabled: boolean;
+    start_time: string;
+    end_time: string;
+  };
+}
+
 export interface Integration {
   id: number;
   name: string;
@@ -614,6 +685,94 @@ class ApiClient {
     );
   }
 
+  async exportAnalytics(params: {
+    metric_types: string[];
+    start_date: string;
+    end_date: string;
+    format?: 'csv' | 'json' | 'excel';
+    granularity?: string;
+    filters?: Record<string, any>;
+  }): Promise<Blob> {
+    const token = this.getAccessToken();
+    const url = `${this.baseUrl}/analytics/export`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(params),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Export failed: ${response.status}`);
+    }
+
+    return response.blob();
+  }
+
+  // ML methods
+  async classifyTicket(data: { title: string; description: string }): Promise<any> {
+    return this.request<any>('/ml/classify', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async analyzeSentiment(data: { text: string }): Promise<any> {
+    return this.request<any>('/ml/sentiment', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async batchClassify(data: { tickets: Array<{ title: string; description: string }> }): Promise<any> {
+    return this.request<any>('/ml/batch', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getMLCategories(): Promise<string[]> {
+    return this.request<string[]>('/ml/categories', {
+      method: 'GET',
+    });
+  }
+
+  async getMLModelsInfo(): Promise<any> {
+    return this.request<any>('/ml/models/info', {
+      method: 'GET',
+    });
+  }
+
+  // Organizations methods
+  async getCurrentOrganization(): Promise<any> {
+    return this.request<any>('/organizations/current', {
+      method: 'GET',
+    });
+  }
+
+  async getCurrentOrganizationStats(): Promise<any> {
+    return this.request<any>('/organizations/current/stats', {
+      method: 'GET',
+    });
+  }
+
+  async updateCurrentOrganization(data: any): Promise<any> {
+    return this.request<any>('/organizations/current', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateOrganizationSettings(settings: Record<string, any>): Promise<any> {
+    return this.request<any>('/organizations/current/settings', {
+      method: 'PATCH',
+      body: JSON.stringify(settings),
+    });
+  }
+
   // Ticket methods
   async getTickets(params?: {
     page?: number;
@@ -711,6 +870,106 @@ class ApiClient {
     }
 
     return response.blob();
+  }
+
+  // Alert Management
+  async getAlerts(params?: {
+    page?: number;
+    size?: number;
+    is_resolved?: boolean;
+    severity?: AlertSeverity;
+    alert_type?: AlertType;
+  }): Promise<{ items: Alert[]; total: number; page: number; size: number }> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.size) queryParams.append('size', params.size.toString());
+    if (params?.is_resolved !== undefined) queryParams.append('is_resolved', params.is_resolved.toString());
+    if (params?.severity) queryParams.append('severity', params.severity);
+    if (params?.alert_type) queryParams.append('alert_type', params.alert_type);
+
+    const query = queryParams.toString();
+    return this.request(`/alerts${query ? `?${query}` : ''}`, {
+      method: 'GET',
+    });
+  }
+
+  async getAlert(id: number): Promise<Alert> {
+    return this.request<Alert>(`/alerts/${id}`, {
+      method: 'GET',
+    });
+  }
+
+  async acknowledgeAlert(id: number, notes?: string): Promise<Alert> {
+    return this.request<Alert>(`/alerts/${id}/acknowledge`, {
+      method: 'POST',
+      body: JSON.stringify({ notes }),
+    });
+  }
+
+  async resolveAlert(id: number): Promise<Alert> {
+    return this.request<Alert>(`/alerts/${id}/resolve`, {
+      method: 'POST',
+    });
+  }
+
+  async deleteAlert(id: number): Promise<void> {
+    return this.request<void>(`/alerts/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Alert Rules
+  async getAlertRules(): Promise<AlertRule[]> {
+    return this.request<AlertRule[]>('/alerts/rules', {
+      method: 'GET',
+    });
+  }
+
+  async getAlertRule(id: number): Promise<AlertRule> {
+    return this.request<AlertRule>(`/alerts/rules/${id}`, {
+      method: 'GET',
+    });
+  }
+
+  async createAlertRule(rule: Omit<AlertRule, 'id'>): Promise<AlertRule> {
+    return this.request<AlertRule>('/alerts/rules', {
+      method: 'POST',
+      body: JSON.stringify(rule),
+    });
+  }
+
+  async updateAlertRule(id: number, rule: Partial<AlertRule>): Promise<AlertRule> {
+    return this.request<AlertRule>(`/alerts/rules/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(rule),
+    });
+  }
+
+  async deleteAlertRule(id: number): Promise<void> {
+    return this.request<void>(`/alerts/rules/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async testAlertRule(rule: Omit<AlertRule, 'id'>): Promise<{ matches: number; sample_tickets: any[] }> {
+    return this.request('/alerts/rules/test', {
+      method: 'POST',
+      body: JSON.stringify(rule),
+    });
+  }
+
+  // Notification Preferences
+  async getNotificationPreferences(): Promise<NotificationPreferences> {
+    return this.request<NotificationPreferences>('/alerts/preferences', {
+      method: 'GET',
+    });
+  }
+
+  async updateNotificationPreferences(preferences: Partial<NotificationPreferences>): Promise<NotificationPreferences> {
+    return this.request<NotificationPreferences>('/alerts/preferences', {
+      method: 'PUT',
+      body: JSON.stringify(preferences),
+    });
   }
 }
 
