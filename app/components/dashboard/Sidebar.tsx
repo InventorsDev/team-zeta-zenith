@@ -10,6 +10,7 @@ import {
   Squares2X2Icon,
   BellAlertIcon,
   BellIcon,
+  MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline';
 
 interface SidebarProps {
@@ -19,6 +20,7 @@ interface SidebarProps {
 const navigation = [
   { name: 'Overview', href: '/dashboard', icon: HomeIcon },
   { name: 'Tickets', href: '/dashboard/tickets', icon: InboxIcon },
+  { name: 'Advanced Search', href: '/dashboard/advanced-search', icon: MagnifyingGlassIcon },
   { name: 'Analytics', href: '/dashboard/analytics', icon: ChartBarIcon },
   { name: 'Custom Dashboard', href: '/dashboard/custom-dashboard', icon: Squares2X2Icon },
   { name: 'Alerts', href: '/dashboard/alerts', icon: BellIcon },

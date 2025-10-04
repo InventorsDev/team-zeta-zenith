@@ -6,7 +6,7 @@ import {
   ClockIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
-import { apiClient, NotificationPreferences, AlertType, AlertSeverity } from '~/lib/api';
+import { apiClient, type NotificationPreferences, AlertType, AlertSeverity } from '~/lib/api';
 
 const ALERT_TYPES = [
   { value: AlertType.HIGH_URGENCY, label: 'High Urgency Tickets', description: 'Critical or high priority tickets' },

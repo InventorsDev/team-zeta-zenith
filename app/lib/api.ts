@@ -118,6 +118,99 @@ export interface NotificationPreferences {
   };
 }
 
+// Search Types
+export enum SearchOperator {
+  EQUALS = 'equals',
+  NOT_EQUALS = 'not_equals',
+  CONTAINS = 'contains',
+  NOT_CONTAINS = 'not_contains',
+  STARTS_WITH = 'starts_with',
+  ENDS_WITH = 'ends_with',
+  GREATER_THAN = 'gt',
+  LESS_THAN = 'lt',
+  GREATER_THAN_OR_EQUAL = 'gte',
+  LESS_THAN_OR_EQUAL = 'lte',
+  IN = 'in',
+  NOT_IN = 'not_in',
+  IS_EMPTY = 'is_empty',
+  IS_NOT_EMPTY = 'is_not_empty',
+}
+
+export interface SearchCondition {
+  field: string;
+  operator: SearchOperator;
+  value: any;
+  logic?: 'AND' | 'OR';
+}
+
+export interface AdvancedSearchRequest {
+  query?: string;
+  conditions?: SearchCondition[];
+  page?: number;
+  size?: number;
+  sort_by?: string;
+  sort_order?: 'asc' | 'desc';
+}
+
+export interface SearchResultHighlight {
+  field: string;
+  value: string;
+  highlighted: string;
+}
+
+export interface TicketSearchResult {
+  id: number;
+  title: string;
+  description?: string;
+  status: string;
+  priority: string;
+  category?: string;
+  channel: string;
+  customer_email: string;
+  customer_name?: string;
+  created_at: string;
+  highlights: SearchResultHighlight[];
+  score?: number;
+}
+
+export interface SearchResultsResponse {
+  items: TicketSearchResult[];
+  total: number;
+  page: number;
+  size: number;
+  pages: number;
+  query?: string;
+  took_ms?: number;
+}
+
+export interface SearchSuggestion {
+  text: string;
+  field: string;
+  count?: number;
+  type: string;
+}
+
+export interface SearchSuggestionsResponse {
+  suggestions: SearchSuggestion[];
+  query: string;
+}
+
+export interface SavedSearch {
+  id?: number;
+  name: string;
+  description?: string;
+  query?: string;
+  conditions?: SearchCondition[];
+  is_default?: boolean;
+  is_shared?: boolean;
+  user_id?: number;
+  organization_id?: number;
+  last_used_at?: string;
+  use_count?: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface Integration {
   id: number;
   name: string;
@@ -969,6 +1062,53 @@ class ApiClient {
     return this.request<NotificationPreferences>('/alerts/preferences', {
       method: 'PUT',
       body: JSON.stringify(preferences),
+    });
+  }
+
+  // Search Methods
+  async advancedSearch(request: AdvancedSearchRequest): Promise<SearchResultsResponse> {
+    return this.request<SearchResultsResponse>('/search/advanced', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  async getSearchSuggestions(query: string, limit: number = 10): Promise<SearchSuggestionsResponse> {
+    const params = new URLSearchParams({ q: query, limit: limit.toString() });
+    return this.request<SearchSuggestionsResponse>(`/search/suggestions?${params}`, {
+      method: 'GET',
+    });
+  }
+
+  async getSavedSearches(): Promise<SavedSearch[]> {
+    return this.request<SavedSearch[]>('/search/saved', {
+      method: 'GET',
+    });
+  }
+
+  async createSavedSearch(search: Omit<SavedSearch, 'id' | 'user_id' | 'organization_id' | 'created_at' | 'updated_at' | 'last_used_at' | 'use_count'>): Promise<SavedSearch> {
+    return this.request<SavedSearch>('/search/saved', {
+      method: 'POST',
+      body: JSON.stringify(search),
+    });
+  }
+
+  async updateSavedSearch(id: number, search: Partial<Omit<SavedSearch, 'id' | 'user_id' | 'organization_id' | 'created_at' | 'updated_at'>>): Promise<SavedSearch> {
+    return this.request<SavedSearch>(`/search/saved/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(search),
+    });
+  }
+
+  async deleteSavedSearch(id: number): Promise<void> {
+    return this.request<void>(`/search/saved/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async useSavedSearch(id: number): Promise<SavedSearch> {
+    return this.request<SavedSearch>(`/search/saved/${id}/use`, {
+      method: 'POST',
     });
   }
 }

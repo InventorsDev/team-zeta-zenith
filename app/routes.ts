@@ -13,6 +13,8 @@ export default [
     route("alerts", "routes/dashboard/alerts.tsx"),
     route("alert-rules", "routes/dashboard/alert-rules.tsx"),
     route("notification-settings", "routes/dashboard/notification-settings.tsx"),
+    route("advanced-search", "routes/dashboard/advanced-search.tsx"),
+    route("saved-searches", "routes/dashboard/saved-searches.tsx"),
     route("integrations", "routes/dashboard/integrations.tsx"),
     route("sync", "routes/dashboard/sync.tsx"),
     route("settings", "routes/dashboard/settings.tsx"),
