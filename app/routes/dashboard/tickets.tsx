@@ -1,5 +1,5 @@
 import type { Route } from "./+types/tickets";
-import { DashboardPage } from "~/components/dashboard/DashboardPage";
+import { TicketsListPage } from "~/components/dashboard/TicketsListPage";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,5 +9,5 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Tickets() {
-  return <DashboardPage />;
+  return <TicketsListPage />;
 }
