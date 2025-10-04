@@ -11,6 +11,8 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
+import { useEffect } from "react";
+import { registerServiceWorker } from "./utils/serviceWorker";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -23,6 +25,10 @@ export const links: Route.LinksFunction = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
+  { rel: "manifest", href: "/manifest.json" },
+  { rel: "icon", type: "image/png", sizes: "192x192", href: "/icon-192.png" },
+  { rel: "icon", type: "image/png", sizes: "512x512", href: "/icon-512.png" },
+  { rel: "apple-touch-icon", href: "/icon-192.png" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -31,6 +37,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="AI-powered customer support analytics platform with ticket management, sentiment analysis, and real-time insights" />
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Support IQ" />
         <Meta />
         <Links />
         <script
@@ -55,6 +66,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  useEffect(() => {
+    // Register service worker for offline capability
+    if (import.meta.env.PROD) {
+      registerServiceWorker();
+    }
+  }, []);
+
   return (
     <ThemeProvider>
       <AuthProvider>
