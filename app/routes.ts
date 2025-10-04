@@ -10,6 +10,7 @@ export default [
     route("tickets", "routes/dashboard/tickets.tsx"),
     route("analytics", "routes/dashboard/analytics.tsx"),
     route("integrations", "routes/dashboard/integrations.tsx"),
+    route("sync", "routes/dashboard/sync.tsx"),
     route("settings", "routes/dashboard/settings.tsx"),
   ]),
 ] satisfies RouteConfig;
