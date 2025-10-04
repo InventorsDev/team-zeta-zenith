@@ -57,7 +57,7 @@ export function SyncStatusPage() {
 
   const loadIntegrationStatus = async (integration: Integration) => {
     try {
-      let status;
+      let status: any = null;
       if (integration.type === IntegrationType.ZENDESK) {
         status = await apiClient.getZendeskStatus();
       } else if (integration.type === IntegrationType.SLACK) {
@@ -168,7 +168,7 @@ export function SyncStatusPage() {
             <span className="ml-2">Auto-refresh (30s)</span>
           </label>
           <button
-            onClick={() => loadSyncStatus()}
+            onClick={() => loadIntegrationsAndStatus()}
             className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           >
             <ArrowPathIcon className="h-4 w-4 mr-2" />
