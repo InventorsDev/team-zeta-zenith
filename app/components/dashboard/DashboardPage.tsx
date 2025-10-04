@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import {
   BellIcon,
   PlusIcon,
@@ -229,7 +229,9 @@ export function DashboardPage() {
       <div className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col">
         {/* Logo */}
         <div className="p-4 border-b border-gray-200">
+          <Link to="/">
           <h1 className="text-xl font-bold text-gray-900">Support IQ</h1>
+          </Link>
         </div>
 
         {/* Navigation */}
