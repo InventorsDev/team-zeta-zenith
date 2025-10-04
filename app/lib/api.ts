@@ -58,7 +58,7 @@ export interface Integration {
   api_endpoint?: string;
   created_at: string;
   updated_at: string;
-  last_sync_at?: string;
+  last_sync_time?: string;
   rate_limit_reset_at?: string;
   last_error?: string;
   current_hour_requests: number;
@@ -237,6 +237,39 @@ export interface TicketStats {
   tickets_by_channel: Record<string, number>;
   tickets_by_category: Record<string, number>;
   sentiment_distribution: Record<string, number>;
+}
+
+export interface SyncStatus {
+  integration_id: number;
+  integration_name: string;
+  integration_type: IntegrationType;
+  last_sync_time?: string;
+  next_sync_at?: string;
+  sync_in_progress: boolean;
+  last_sync_status: 'success' | 'failed' | 'partial' | null;
+  last_sync_records: number;
+  last_sync_error?: string;
+  total_syncs: number;
+  successful_syncs: number;
+  failed_syncs: number;
+}
+
+export interface SyncHistory {
+  id: number;
+  integration_id: number;
+  started_at: string;
+  completed_at?: string;
+  status: 'success' | 'failed' | 'partial' | 'in_progress';
+  records_synced: number;
+  error_message?: string;
+  error_details?: Record<string, any>;
+}
+
+export interface SyncResponse {
+  message: string;
+  sync_id: number;
+  status: string;
+  records_synced?: number;
 }
 
 class ApiClient {
@@ -477,6 +510,108 @@ class ApiClient {
     return this.request<any>(`/integrations/slack/sync?full_sync=${fullSync}`, {
       method: 'POST',
     });
+  }
+
+  // Sync status methods - use integration-specific endpoints
+  async getZendeskStatus(): Promise<any> {
+    return this.request<any>('/integrations/zendesk/status', {
+      method: 'GET',
+    });
+  }
+
+  async getSlackStatus(): Promise<any> {
+    return this.request<any>('/integrations/slack/status', {
+      method: 'GET',
+    });
+  }
+
+  async syncEmailIntegration(): Promise<any> {
+    return this.request<any>('/email-integration/sync', {
+      method: 'POST',
+    });
+  }
+
+  // Analytics methods
+  async getAnalyticsDashboard(params?: {
+    start_date?: string;
+    end_date?: string;
+    use_cache?: boolean;
+  }): Promise<any> {
+    const queryParams = new URLSearchParams();
+    if (params?.start_date) queryParams.append('start_date', params.start_date);
+    if (params?.end_date) queryParams.append('end_date', params.end_date);
+    if (params?.use_cache !== undefined) queryParams.append('use_cache', params.use_cache.toString());
+
+    const query = queryParams.toString();
+    return this.request<any>(
+      `/analytics/dashboard${query ? `?${query}` : ''}`,
+      { method: 'GET' }
+    );
+  }
+
+  async getAnalyticsTimeSeries(params: {
+    metric_type: string;
+    start_date: string;
+    end_date: string;
+    granularity?: string;
+    status?: string[];
+    priority?: string[];
+    channel?: string[];
+    category?: string[];
+    use_cache?: boolean;
+  }): Promise<any> {
+    const queryParams = new URLSearchParams();
+    queryParams.append('start_date', params.start_date);
+    queryParams.append('end_date', params.end_date);
+    if (params.granularity) queryParams.append('granularity', params.granularity);
+    if (params.status) params.status.forEach(s => queryParams.append('status', s));
+    if (params.priority) params.priority.forEach(p => queryParams.append('priority', p));
+    if (params.channel) params.channel.forEach(c => queryParams.append('channel', c));
+    if (params.category) params.category.forEach(c => queryParams.append('category', c));
+    if (params.use_cache !== undefined) queryParams.append('use_cache', params.use_cache.toString());
+
+    return this.request<any>(
+      `/analytics/time-series/${params.metric_type}?${queryParams.toString()}`,
+      { method: 'GET' }
+    );
+  }
+
+  async getAnalyticsDistribution(params: {
+    field: string;
+    start_date: string;
+    end_date: string;
+    status?: string[];
+    priority?: string[];
+    use_cache?: boolean;
+  }): Promise<any> {
+    const queryParams = new URLSearchParams();
+    queryParams.append('start_date', params.start_date);
+    queryParams.append('end_date', params.end_date);
+    if (params.status) params.status.forEach(s => queryParams.append('status', s));
+    if (params.priority) params.priority.forEach(p => queryParams.append('priority', p));
+    if (params.use_cache !== undefined) queryParams.append('use_cache', params.use_cache.toString());
+
+    return this.request<any>(
+      `/analytics/distribution/${params.field}?${queryParams.toString()}`,
+      { method: 'GET' }
+    );
+  }
+
+  async getPerformanceMetrics(params?: {
+    start_date?: string;
+    end_date?: string;
+    use_cache?: boolean;
+  }): Promise<any> {
+    const queryParams = new URLSearchParams();
+    if (params?.start_date) queryParams.append('start_date', params.start_date);
+    if (params?.end_date) queryParams.append('end_date', params.end_date);
+    if (params?.use_cache !== undefined) queryParams.append('use_cache', params.use_cache.toString());
+
+    const query = queryParams.toString();
+    return this.request<any>(
+      `/analytics/performance${query ? `?${query}` : ''}`,
+      { method: 'GET' }
+    );
   }
 
   // Ticket methods
