@@ -323,9 +323,9 @@ export function IntegrationsPage() {
                         <span>
                           Type: <span className="font-medium">{integration.type}</span>
                         </span>
-                        {integration.last_sync_at && (
+                        {integration.last_sync_time && (
                           <span>
-                            Last synced: {new Date(integration.last_sync_at).toLocaleString()}
+                            Last synced: {new Date(integration.last_sync_time).toLocaleString()}
                           </span>
                         )}
                         {integration.total_tickets_synced > 0 && (
