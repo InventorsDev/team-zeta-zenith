@@ -7,6 +7,9 @@ import {
   PuzzlePieceIcon,
   XMarkIcon,
   ArrowPathIcon,
+  Squares2X2Icon,
+  BellAlertIcon,
+  BellIcon,
 } from '@heroicons/react/24/outline';
 
 interface SidebarProps {
@@ -17,6 +20,9 @@ const navigation = [
   { name: 'Overview', href: '/dashboard', icon: HomeIcon },
   { name: 'Tickets', href: '/dashboard/tickets', icon: InboxIcon },
   { name: 'Analytics', href: '/dashboard/analytics', icon: ChartBarIcon },
+  { name: 'Custom Dashboard', href: '/dashboard/custom-dashboard', icon: Squares2X2Icon },
+  { name: 'Alerts', href: '/dashboard/alerts', icon: BellIcon },
+  { name: 'Alert Rules', href: '/dashboard/alert-rules', icon: BellAlertIcon },
   { name: 'Integrations', href: '/dashboard/integrations', icon: PuzzlePieceIcon },
   { name: 'Sync Status', href: '/dashboard/sync', icon: ArrowPathIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
